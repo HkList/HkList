@@ -3,13 +3,10 @@
 namespace App\Http\Middleware;
 
 use App\Http\Controllers\ResponseController;
-use App\Models\Account;
 use Closure;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Schema;
 use Symfony\Component\HttpFoundation\Response;
 use Throwable;
 
