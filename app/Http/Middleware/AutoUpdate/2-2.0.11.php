@@ -1,6 +1,5 @@
 <?php
 
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
 // 2.0.11 删除指纹表

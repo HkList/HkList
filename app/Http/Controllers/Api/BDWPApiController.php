@@ -399,7 +399,7 @@ class BDWPApiController extends Controller
             "uk" => $response["data"]["uk"],
             "shareid" => $response["data"]["shareid"],
             "randsk" => $seckeyData["data"]["seckey"],
-            "uname" => $seckeyData["data"]["uname"],
+            "uname" => $response["data"]["uname"],
             "list" => collect($response["data"]["list"])->map(function ($item) {
                 return [
                     "category" => (int)$item["category"],

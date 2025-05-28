@@ -13,6 +13,7 @@ use App\Http\Controllers\Parsers\V6Controller;
 use App\Http\Controllers\Parsers\V7Controller;
 use App\Models\Account;
 use App\Models\FileList;
+use App\Models\Proxy;
 use App\Models\Record;
 use App\Models\Token;
 use Illuminate\Http\Request;
@@ -363,16 +364,35 @@ class ParseController extends Controller
 
         $proxy_host = $token["token"] === "guest" ? config("hklist.parse.guest_proxy_host") : config("hklist.parse.token_proxy_host");
         $proxy_password = config("hklist.parse.token_proxy_password");
+
         $now = now();
 
         $responseData = collect($responseData)->map(function ($item) use ($request, $token, $proxy_host, $proxy_password, $remove_limit, &$now) {
             if ($item["message"] !== "请求成功") return $item;
+            $account = Account::query()->find($item["account_id"]);
+            $newProxy = Proxy::query()->firstWhere([
+                "account_id" => $account["id"],
+                "type" => "proxy"
+            ]);
 
             $isLimit = false;
             foreach ($item["urls"] as $url) if (!str_contains($url, "tsl=0") || str_contains($url, "qdall")) $isLimit = true;
-            $item["urls"] = collect($item["urls"])->filter(fn($url) => !str_contains($url, "ant.baidu.com"));
-            if ($proxy_host !== "") $item["urls"] = $item["urls"]->map(fn($url) => $proxy_host . "?url=" . urlencode(base64_encode(UtilsController::xor_encrypt($url, $proxy_password))));
-            $item["urls"] = $item["urls"]->values()->toArray();
+
+            $item["urls"] = collect($item["urls"])
+                ->filter(fn($url) => !str_contains($url, "ant.baidu.com"))
+                ->map(function ($url) use ($proxy_host, $proxy_password, $newProxy) {
+                    if ($newProxy && $newProxy["enable"]) {
+                        $arr = explode("@", $newProxy["proxy"]);
+                        $host = $arr[0];
+                        $password = $arr[1];
+                        return $host . "?url=" . urlencode(base64_encode(UtilsController::xor_encrypt($url, $password)));
+                    }
+                    if ($proxy_host !== "") return $proxy_host . "?url=" . urlencode(base64_encode(UtilsController::xor_encrypt($url, $proxy_password)));
+
+                    return $url;
+                })
+                ->values()
+                ->toArray();
 
             if (!$remove_limit) {
                 $file = FileList::query()->firstWhere([
@@ -380,7 +400,6 @@ class ParseController extends Controller
                 ]);
             }
 
-            $account = Account::query()->find($item["account_id"]);
             if ($account["total_size_updated_at"] === null || !$account["total_size_updated_at"]->isToday() || !$now->isToday()) {
                 $account->update([
                     "total_size" => 0,
