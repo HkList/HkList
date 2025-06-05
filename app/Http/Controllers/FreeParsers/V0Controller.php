@@ -39,7 +39,7 @@ class V0Controller extends Controller
             return $saveToDisk;
         }
 
-        $ua = config("hklist.parse.user_agent");
+        $ua = $request["token"] === "guest" ? config("hklist.parse.guest_user_agent") : config("hklist.parse.token_user_agent");
         $list = $saveToDiskData["data"];
         $urls = [];
         foreach ($list as $item) {

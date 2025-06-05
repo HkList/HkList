@@ -380,4 +380,14 @@ class ResponseController extends Controller
     {
         return self::response(20063, 500, "未知卡密类型");
     }
+
+    public static function needMoiuToken()
+    {
+        return self::response(20064, 500, "此模式需要使用MoiuToken");
+    }
+
+    public static function unavaliable()
+    {
+        return self::response(20065, 500, "当前解析模式不可用");
+    }
 }

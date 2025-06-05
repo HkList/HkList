@@ -33,14 +33,20 @@ return [
     "parse" => [
         "parser_server" => env("HKLIST_PARSER_SERVER", ""),
         "parser_password" => env("HKLIST_PARSER_PASSWORD", ""),
-        "parse_mode" => (int)env("HKLIST_PARSE_MODE", 1),
-        "guest_parse_mode" => (int)env("HKLIST_GUEST_PARSE_MODE", env("HKLIST_PARSE_MODE", 1)),
-        "user_agent" => env("HKLIST_USER_AGENT", "netdisk;P2SP;3.0.20.88"),
         "allow_folder" => (bool)env("HKLIST_ALLOW_FOLDER", false),
         "ddddocr_server" => env("HKLIST_DDDDOCR_SERVER", "https://ddddocr.huankong.top"),
-        "guest_proxy_host" => env("HKLIST_GUEST_PROXY_HOST", env("HKLIST_PROXY_HOST", "")),
-        "token_proxy_host" => env("HKLIST_TOKEN_PROXY_HOST", env("HKLIST_PROXY_HOST", "")),
-        "token_proxy_password" => env("HKLIST_TOKEN_PROXY_PASSWORD", "hklist")
+
+        "token_parse_mode" => (int)env("HKLIST_TOKEN_PARSE_MODE", 0),
+        "token_user_agent" => env("HKLIST_TOKEN_USER_AGENT", "netdisk;P2SP;3.0.20.138"),
+        "guest_parse_mode" => (int)env("HKLIST_GUEST_PARSE_MODE", 0),
+        "guest_user_agent" => env("HKLIST_GUEST_USER_AGENT", "netdisk;P2SP;3.0.20.138"),
+
+        "token_proxy_host" => env("HKLIST_TOKEN_PROXY_HOST", ""),
+        "token_proxy_password" => env("HKLIST_TOKEN_PROXY_PASSWORD", "hklist"),
+        "guest_proxy_host" => env("HKLIST_GUEST_PROXY_HOST", ""),
+        "guest_proxy_password" => env("HKLIST_GUEST_PROXY_PASSWORD", "hklist"),
+
+        "moiu_token" => env("HKLIST_MOIU_TOKEN", ""),
     ],
     "proxy" => [
         "enable" => (bool)env("HKLIST_PROXY_ENABLE", false),
