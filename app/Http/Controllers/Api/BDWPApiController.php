@@ -314,7 +314,7 @@ class BDWPApiController extends Controller
      *     }[]
      * }
      */
-    public static function getFileList($surl, $pwd = "", $dir = "/", $page = 1, $num = 100, $order = "filename")
+    public static function getFileList($surl, $pwd = "", $dir = "/", $page = 1, $num = 1000, $order = "filename")
     {
         if (is_numeric(substr($surl, 0, 1))) $surl = substr($surl, 1);
         $surl = "1" . $surl;
@@ -399,6 +399,7 @@ class BDWPApiController extends Controller
             "uk" => $response["data"]["uk"],
             "shareid" => $response["data"]["shareid"],
             "randsk" => $seckeyData["data"]["seckey"],
+            "uname" => $response["data"]["uname"],
             "list" => collect($response["data"]["list"])->map(function ($item) {
                 return [
                     "category" => (int)$item["category"],

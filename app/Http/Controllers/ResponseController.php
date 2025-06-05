@@ -89,6 +89,7 @@ class ResponseController extends Controller
         "-15" => "对不起，邮件分享每天限制20封，你今天已经分享完，请明天再来分享吧！",
         "-16" => "对不起，该文件已经限制分享！",
         "-17" => "文件分享超过限制",
+        "-19" => "请求频率过高,请使用代理请求",
         "-30" => "文件已存在",
         "-31" => "文件保存失败",
         "-33" => "一次支持操作999个，减点试试吧",
@@ -378,5 +379,15 @@ class ResponseController extends Controller
     public static function unknownTokenType()
     {
         return self::response(20063, 500, "未知卡密类型");
+    }
+
+    public static function needMoiuToken()
+    {
+        return self::response(20064, 500, "此模式需要使用MoiuToken");
+    }
+
+    public static function unavaliable()
+    {
+        return self::response(20065, 500, "当前解析模式不可用");
     }
 }

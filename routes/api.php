@@ -10,6 +10,7 @@ use App\Http\Controllers\Config\ParseConfigController;
 use App\Http\Controllers\Config\ProxyConfigController;
 use App\Http\Controllers\InstallController;
 use App\Http\Controllers\ParseController;
+use App\Http\Controllers\ProxyController;
 use App\Http\Controllers\RecordController;
 use App\Http\Controllers\TokenController;
 use Illuminate\Support\Facades\Route;
@@ -62,6 +63,13 @@ Route::middleware(["CheckRand", "AutoUpdate"])->group(function () {
 
                 Route::prefix("/record")->group(function () {
                     Route::get("/", [RecordController::class, "select"]);
+                });
+
+                Route::prefix("/proxy")->group(function () {
+                    Route::get("/", [ProxyController::class, "select"]);
+                    Route::post("/", [ProxyController::class, "insert"]);
+                    Route::patch("/", [ProxyController::class, "update"]);
+                    Route::delete("/", [ProxyController::class, "delete"]);
                 });
 
                 Route::prefix("/config")->group(function () {

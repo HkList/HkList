@@ -21,14 +21,20 @@ class ParseConfigController extends Controller
         $validator = Validator::make($request->all(), [
             "parser_server" => "nullable|string",
             "parser_password" => "nullable|string",
-            "user_agent" => "required|string",
-            "parse_mode" => "required|numeric",
-            "guest_parse_mode" => "required|numeric",
             "allow_folder" => "required|boolean",
             "ddddocr_server" => "nullable|string",
-            "guest_proxy_host" => "nullable|string",
+
+            "token_parse_mode" => "required|numeric",
+            "token_user_agent" => "required|string",
+            "guest_parse_mode" => "required|numeric",
+            "guest_user_agent" => "required|string",
+
             "token_proxy_host" => "nullable|string",
-            "token_proxy_password" => "nullable|string"
+            "token_proxy_password" => "nullable|string",
+            "guest_proxy_host" => "nullable|string",
+            "guest_proxy_password" => "nullable|string",
+
+            "moiu_token" => "nullable|string"
         ]);
 
         if ($validator->fails()) return ResponseController::paramsError($validator->errors());
@@ -41,14 +47,20 @@ class ParseConfigController extends Controller
         UtilsController::updateEnv([
             "HKLIST_PARSER_SERVER" => $request["parser_server"] ?? "",
             "HKLIST_PARSER_PASSWORD" => $request["parser_password"] ?? "",
-            "HKLIST_USER_AGENT" => $request["user_agent"],
-            "HKLIST_PARSE_MODE" => $request["parse_mode"],
-            "HKLIST_GUEST_PARSE_MODE" => $request["guest_parse_mode"],
             "HKLIST_ALLOW_FOLDER" => $request["allow_folder"],
             "HKLIST_DDDDOCR_SERVER" => $request["ddddocr_server"] ?? "",
-            "HKLIST_GUEST_PROXY_HOST" => $request["guest_proxy_host"] ?? "",
+
+            "HKLIST_TOKEN_PARSE_MODE" => $request["token_parse_mode"],
+            "HKLIST_TOKEN_USER_AGENT" => $request["token_user_agent"],
+            "HKLIST_GUEST_PARSE_MODE" => $request["guest_parse_mode"],
+            "HKLIST_GUEST_USER_AGENT" => $request["guest_user_agent"],
+
             "HKLIST_TOKEN_PROXY_HOST" => $request["token_proxy_host"] ?? "",
-            "HKLIST_TOKEN_PROXY_PASSWORD" => $request["token_proxy_password"] ?? ""
+            "HKLIST_TOKEN_PROXY_PASSWORD" => $request["token_proxy_password"] ?? "",
+            "HKLIST_GUEST_PROXY_HOST" => $request["guest_proxy_host"] ?? "",
+            "HKLIST_GUEST_PROXY_PASSWORD" => $request["guest_proxy_password"] ?? "",
+
+            "HKLIST_MOIU_TOKEN" => $request["moiu_token"] ?? "",
         ]);
 
         return ResponseController::success();
