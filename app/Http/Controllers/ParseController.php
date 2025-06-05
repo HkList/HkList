@@ -379,7 +379,8 @@ class ParseController extends Controller
             foreach ($item["urls"] as $url) if (!str_contains($url, "tsl=0") || str_contains($url, "qdall")) $isLimit = true;
 
             $item["urls"] = collect($item["urls"])
-                ->filter(fn($url) => !str_contains($url, "ant.baidu.com"))
+                ->filter(fn($url) => !str_contains($url, "ant.baidu.com") && !str_starts_with($url, "http://"))
+                ->reverse()
                 ->map(function ($url) use ($proxy_host, $proxy_password, $newProxy) {
                     if ($newProxy && $newProxy["enable"]) {
                         $arr = explode("@", $newProxy["proxy"]);
