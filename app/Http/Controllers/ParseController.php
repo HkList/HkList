@@ -378,7 +378,15 @@ class ParseController extends Controller
                 ]);
 
             $isLimit = false;
-            foreach ($item["urls"] as $url) if (!str_contains($url, "tsl=0") || str_contains($url, "qdall")) $isLimit = true;
+            foreach ($item["urls"] as $url) {
+                if (str_contains($url, "qdall")) $isLimit = true;
+
+                // 获取 tsl 的值
+                $query = parse_url($url, PHP_URL_QUERY);
+                parse_str($query, $params);
+                $tsl = (int)($params["tsl"] ?? "0");
+                if ($tsl !== 0 && $tsl <= 10240) $isLimit = true;
+            }
 
             $item["urls"] = collect($item["urls"])
                 ->filter(fn($url) => !str_contains($url, "ant.baidu.com"))
