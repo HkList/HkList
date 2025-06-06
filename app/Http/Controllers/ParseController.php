@@ -142,7 +142,7 @@ class ParseController extends Controller
 
     public static function getAccountType($token)
     {
-        return match ($token === "guest" ? config("hklist.parse.guest_parse_mode") : config("hklist.parse.parse_mode")) {
+        return match ($token === "guest" ? config("hklist.parse.guest_parse_mode") : config("hklist.parse.token_parse_mode")) {
             // 正常模式
             0, 1, 2 => ResponseController::success(["account_type" => ["cookie"], "account_data" => ["vip_type" => "超级会员"]]),
             // 开放平台
@@ -334,7 +334,7 @@ class ParseController extends Controller
             if ($sum > $checkLimitData["size"]) return ResponseController::tokenQuotaSizeIsNotEnough();
         }
 
-        $parse_mode = $request["token"] === "guest" ? config("hklist.parse.guest_parse_mode") : config("hklist.parse.parse_mode");
+        $parse_mode = $request["token"] === "guest" ? config("hklist.parse.guest_parse_mode") : config("hklist.parse.token_parse_mode");
         $response = match ($parse_mode) {
             0 => V0Controller::request($request),
             1 => V1Controller::request($request),
