@@ -52,22 +52,25 @@ class ProxyController extends Controller
         $validator = Validator::make($request->all(), [
             "id" => "required|array",
             "id.*" => "required|numeric",
-            "type" => ["required", Rule::in(['http', 'api', "proxy"])],
+            "type" => ["nullable", Rule::in(['http', 'api', "proxy"])],
             "proxy" => "required|string",
             "enable" => "nullable|boolean",
             "reason" => "nullable|string",
-            "account_id" => "required|numeric",
+            "account_id" => "nullable|numeric",
         ]);
         if ($validator->fails()) return ResponseController::paramsError($validator->errors());
 
         $count = Proxy::query()
             ->whereIn("id", $request["id"])
             ->update([
-                "type" => $request["type"],
                 "proxy" => $request["proxy"],
                 "enable" => $request["enable"] ?? true,
                 "reason" => $request["reason"] ?? null,
-                "account_id" => $request["account_id"]
+                ...(
+                (isset($request["type"]) && isset($request["account_id"]))
+                    ? ["type" => $request["type"], "account_id" => $request["account_id"]]
+                    : []
+                ),
             ]);
 
         if ($count === 0) {
