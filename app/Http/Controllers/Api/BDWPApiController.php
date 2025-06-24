@@ -140,17 +140,33 @@ class BDWPApiController extends Controller
      */
     public static function getAccessToken($refreshToken)
     {
+//        $res = UtilsController::sendRequest(
+//            "BDWPApiController::getAccessToken",
+//            "get",
+//            "https://openapi.baidu.com/oauth/2.0/token",
+//            [
+//                "query" => [
+//                    "grant_type" => "refresh_token",
+//                    "refresh_token" => $refreshToken,
+//                    // openlist
+//                    "client_id" => "NqOMXF6XGhGRIGemsQ9nG0Na",
+//                    "client_secret" => "SVT6xpMdLcx6v4aCR4wT8BBOTbzFO8LM"
+//                ]
+//            ]
+//        );
+
         $res = UtilsController::sendRequest(
             "BDWPApiController::getAccessToken",
             "get",
-            "https://openapi.baidu.com/oauth/2.0/token",
+            "https://api.oplist.org/baiduyun/renewapi",
             [
                 "query" => [
-                    "grant_type" => "refresh_token",
-                    "refresh_token" => $refreshToken,
-                    // alist
-                    "client_id" => "iYCeC9g08h5vuP9UqvPHKKSVrKFXGa1v",
-                    "client_secret" => "jXiFMOPVPCWlO2M5CwWQzffpNPaGTRBG"
+                    "client_uid" => "",
+                    "client_key" => "",
+                    "driver_txt" => "baiduyun_go",
+                    "server_use" => "true",
+                    "secret_key" => "",
+                    "refresh_ui" => $refreshToken
                 ]
             ]
         );
@@ -161,13 +177,17 @@ class BDWPApiController extends Controller
         $accessToken = $data["data"];
         if (
             isset($accessToken["error"]) ||
-            isset($accessToken["error_description"])
+            isset($accessToken["error_description"]) ||
+            !isset($accessToken["refresh_token"])
         ) {
-            return ResponseController::getAccessTokenFailed($accessToken["error"] ?? "未知", $accessToken["error_description"] ?? "未知");
+            return ResponseController::getAccessTokenFailed(
+                $accessToken["error"] ?? "未知",
+                $accessToken["error_description"] ?? $accessToken["text"] ?? "未知"
+            );
         }
 
         return ResponseController::success([
-            "expires_at" => now()->addSeconds($accessToken["expires_in"])->getTimestamp(),
+            "expires_at" => now()->addSeconds($accessToken["expires_in"] ?? 2592000)->getTimestamp(),
             "access_token" => $accessToken["access_token"],
             "refresh_token" => $accessToken["refresh_token"],
         ]);
